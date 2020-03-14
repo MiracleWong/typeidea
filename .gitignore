@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+### Django ###
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+>>>>>>> 9ac2e33b6a9824e63811b55db7bcd6010553d956
