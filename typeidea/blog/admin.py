@@ -69,17 +69,36 @@ class PostAdmin(admin.ModelAdmin):
 
     save_on_top = True
 
-    fields = (
-        ('category', 'title'),
-        'desc',
-        'status',
-        'content',
-        'tag',
+    # fields = (
+    #     ('category', 'title'),
+    #     'desc',
+    #     'status',
+    #     'content',
+    #     'tag',
+    # )
+    fieldsets = (
+        ('基础配置', {
+            'description': '基础配置描述',
+            'fields': (
+                ('category', 'title'),
+                'status',
+            ),
+        }),
+        ('内容', {
+            'fields': (
+                'desc',
+                'content',
+            ),
+        }),
+        ('额外信息', {
+            'classes': ('collapse',),
+            'fields': ('tag',)
+        }),
     )
 
     def operator(self, obj):
         return format_html(
-            '<a href="{}"> 编辑 </a>',
+            '<a href="{}"> 编辑  </a>',
             reverse('admin:blog_post_change', args=(obj.id,))
         )
     operator.shot_description = '操作'
@@ -96,6 +115,5 @@ class PostAdmin(admin.ModelAdmin):
         return obj.post_set.count()
 
     post_count.shot_description = '文章数量'
-
 
 # TODO Serverless 技术
