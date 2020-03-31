@@ -6,6 +6,7 @@ from django.contrib import admin
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
+from .adminforms import PostAdminForm
 
 from .models import Post, Tag, Category
 
@@ -50,6 +51,7 @@ class CategoryOwnerFilter(admin.SimpleListFilter):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
+    form = PostAdminForm
     # list_display 配置列表页面展示哪些字段
     list_display = [
         'title', 'category', 'status',
@@ -67,15 +69,18 @@ class PostAdmin(admin.ModelAdmin):
 
     # 编辑页面
 
-    save_on_top = True
+    save_on_top = False
 
-    # fields = (
-    #     ('category', 'title'),
-    #     'desc',
-    #     'status',
-    #     'content',
-    #     'tag',
-    # )
+    """
+    fields = (
+        ('category', 'title'),
+        'desc',
+        'status',
+        'content',
+        'tag',
+    )    
+    """
+
     fieldsets = (
         ('基础配置', {
             'description': '基础配置描述',
