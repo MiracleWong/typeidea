@@ -7,8 +7,8 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
 from .adminforms import PostAdminForm
-
 from .models import Post, Tag, Category
+from typeidea.custom_admin import custom_site
 
 
 # 这是一个伪需求：6.2.5 在同一页面编辑关联数据
@@ -18,7 +18,7 @@ class PostInLine(admin.TabularInline):
     model = Post
 
 
-@admin.register(Category)
+@admin.register(Category, site=custom_site)
 class CategoryAdmin(admin.ModelAdmin):
     inlines = [PostInLine, ]
     list_display = ('name', 'status', 'is_nav', 'owner', 'created_time')
@@ -29,7 +29,7 @@ class CategoryAdmin(admin.ModelAdmin):
         return super(CategoryAdmin, self).save_model(request, obj, form,change)
 
 
-@admin.register(Tag)
+@admin.register(Tag, site=custom_site)
 class TagAdmin(admin.ModelAdmin):
     list_display = ('name', 'status', 'owner', 'created_time')
     fields = ('name', 'status')
@@ -57,7 +57,7 @@ class CategoryOwnerFilter(admin.SimpleListFilter):
         return queryset
 
 
-@admin.register(Post)
+@admin.register(Post, site=custom_site)
 class PostAdmin(admin.ModelAdmin):
     form = PostAdminForm
     # list_display 配置列表页面展示哪些字段
@@ -112,7 +112,7 @@ class PostAdmin(admin.ModelAdmin):
     def operator(self, obj):
         return format_html(
             '<a href="{}"> 编辑  </a>',
-            reverse('admin:blog_post_change', args=(obj.id,))
+            reverse('cus_admin:blog_post_change', args=(obj.id,))
         )
     operator.shot_description = '操作'
 
@@ -122,7 +122,7 @@ class PostAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         qs = super(PostAdmin, self).get_queryset(request)
-        return qs.filter(owner= request.user)
+        return qs.filter(owner=request.user)
 
     def post_count(self, obj):
         return obj.post_set.count()
