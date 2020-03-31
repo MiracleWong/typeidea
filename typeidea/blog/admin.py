@@ -116,4 +116,10 @@ class PostAdmin(admin.ModelAdmin):
 
     post_count.shot_description = '文章数量'
 
+    class Media:
+        css = {
+            'all': ('https://cdn.bootcss.com/twitter-bootstrap/4.4.1/css/bootstrap.min.css',),
+        }
+        js = ('https://cdn.bootcss.com/twitter-bootstrap/4.4.1/js/bootstrap.bundle.js',)
+
 # TODO Serverless 技术
