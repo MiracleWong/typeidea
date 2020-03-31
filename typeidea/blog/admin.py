@@ -10,6 +10,7 @@ from .adminforms import PostAdminForm
 from .models import Post, Tag, Category
 from typeidea.custom_admin import custom_site
 from typeidea.base_admin import BaseOwnerAdmin
+from django.contrib.admin.models import LogEntry
 
 
 # 这是一个伪需求：6.2.5 在同一页面编辑关联数据
@@ -119,3 +120,11 @@ class PostAdmin(BaseOwnerAdmin):
             'all': ('https://cdn.bootcss.com/twitter-bootstrap/4.4.1/css/bootstrap.min.css',),
         }
         js = ('https://cdn.bootcss.com/twitter-bootstrap/4.4.1/js/bootstrap.bundle.js',)
+
+
+@admin.register(LogEntry, site=custom_site)
+class LogEntryAdmin(admin.ModelAdmin):
+    list_display = [
+        'object_repr', 'object_id', 'action_flag',
+        'user', 'change_message',
+    ]
