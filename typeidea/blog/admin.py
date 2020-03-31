@@ -11,8 +11,16 @@ from .adminforms import PostAdminForm
 from .models import Post, Tag, Category
 
 
+# 这是一个伪需求：6.2.5 在同一页面编辑关联数据
+class PostInLine(admin.TabularInline):
+    fields = ('title', 'desc')
+    extra = 1
+    model = Post
+
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
+    inlines = [PostInLine, ]
     list_display = ('name', 'status', 'is_nav', 'owner', 'created_time')
     fields = ('name', 'status', 'is_nav')
 
@@ -32,9 +40,9 @@ class TagAdmin(admin.ModelAdmin):
 
 
 class CategoryOwnerFilter(admin.SimpleListFilter):
-    '''
+    """
     自定义过滤器，只展示当前用户的分类
-    '''
+    """
 
     title = '分类过滤器'
     parameter_name = 'owner_category'
@@ -126,5 +134,3 @@ class PostAdmin(admin.ModelAdmin):
             'all': ('https://cdn.bootcss.com/twitter-bootstrap/4.4.1/css/bootstrap.min.css',),
         }
         js = ('https://cdn.bootcss.com/twitter-bootstrap/4.4.1/js/bootstrap.bundle.js',)
-
-# TODO Serverless 技术
