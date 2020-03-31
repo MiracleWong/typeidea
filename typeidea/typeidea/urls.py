@@ -19,6 +19,7 @@ from .custom_admin import custom_site
 
 
 urlpatterns = [
+    # url(r'^admin/', admin.site.urls),
     url(r'^super_admin/', admin.site.urls),
     url(r'^admin/', custom_site.urls),
 ]
