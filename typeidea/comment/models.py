@@ -17,7 +17,9 @@ class Comment(models.Model):
     target = models.ForeignKey(Post, verbose_name='评论目标')
     content = models.CharField(max_length=2000, verbose_name='内容')
     nickname = models.CharField(max_length=500, verbose_name='昵称')
+    # URLField：继承自CharField，实现对URL的特殊处理
     website = models.URLField(verbose_name='网站')
+    # EmailField：继承自CharField，实现对Email的特殊处理
     email = models.EmailField(verbose_name='邮箱')
     status = models.PositiveIntegerField(choices=STATUS_ITEMS, default=STATUS_NORMAL, verbose_name="状态")
     created_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
