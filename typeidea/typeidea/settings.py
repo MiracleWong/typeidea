@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     # 'simpleui',
+    'typeidea',
     'blog',
     'config',
     'comment',
