@@ -6,7 +6,6 @@ from django.contrib.auth.models import User
 # Create your models here.
 class Category(models.Model):
     """
-
     django 要求模型必须继承 models.Model 类。
     当然自己也可以写一个继承自 models.Model 的基类
     Category 需要分类名 name、状态 status 、是否为导航 is_nav、作者（拥有者） owner
@@ -98,7 +97,7 @@ class Tag(models.Model):
         verbose_name = verbose_name_plural = '标签'
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
 class Post(models.Model):
@@ -111,14 +110,18 @@ class Post(models.Model):
         (STATUS_DRAFT, '草稿'),
     )
 
-    #
     title = models.CharField(max_length=255, verbose_name='标题')
+    # 文章摘要，可以没有，但默认是必须要存入数据的，否则报错
+    #  CharField 的 blank=True 参数值后就可以允许空值了。
     desc = models.CharField(max_length=1024, blank=True, verbose_name='摘要')
     # TextField 来存储大量文本内容，对应于MySQL中的logtext
     content = models.TextField(verbose_name='正文', help_text='正文必须为Markdown格式')
     status = models.PositiveIntegerField(choices=STATUS_ITEMS, default=STATUS_NORMAL, verbose_name="状态")
     owner = models.ForeignKey(User, verbose_name='作者')
+    # 我们规定一篇文章只能对应一个分类，但是一个分类下可以有多篇文章，使用的是 ForeignKey，即一对多的关联关系。
+    # TODO 自 django 2.0 以后，ForeignKey 必须传入一个 on_delete 参数用来指定当关联的数据被删除时，被关联数据的行为
     category = models.ForeignKey(Category, verbose_name='分类')
+    # TODO 需要重新梳理文章和标签的关系，是一对多，还是多对多
     tag = models.ForeignKey(Tag, verbose_name='标签')
     created_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
 
@@ -127,4 +130,6 @@ class Post(models.Model):
 
     class Meta:
         verbose_name = verbose_name_plural = '文章'
-        ordering = ['-id']  # 根据id进行降序排列 TODO: 哪里来的id
+        # 根据id进行降序排列
+        # Category类，还有一个列 id，虽然没有显示定义，但 django 会为我们自动创建，这是一个自增类型。
+        ordering = ['-id']
