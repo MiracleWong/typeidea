@@ -7,6 +7,9 @@ from .models import Post, Tag, Category
 
 # post_list 的逻辑是：从Model从数据库中批量拿取数据，然后把标题和摘要展示到页面上。
 def post_list(request, category_id=None, tag_id=None):
+    tag = None
+    category = None
+
     if tag_id:
         # try……except：如果查询到不存在的对象，需要捕获并处理异常，避免当数据不存在时出现错误
         try:
@@ -21,10 +24,20 @@ def post_list(request, category_id=None, tag_id=None):
         # 而不是先过滤出指定id的Post，再看文章状态是否正常。
         post_list = Post.objects.filter(status=Post.STATUS_NORMAL)
         if category_id:
-            post_list = post_list.filter(category_id=category_id)
+            try:
+                category = Category.objects.get(id = category_id)
+            except Category.DoesNotExist:
+                category = None
+            else:
+                post_list = post_list.filter(category_id=category_id)
 
+    context = {
+        'category': category,
+        'tag': tag,
+        'post_list': post_list,
+    }
     # 进行数据回传的时候，要注意context中的内容，不要把后面的加上''，成为'post_list'
-    return render(request, 'blog/list.html', context={'post_list': post_list})
+    return render(request, 'blog/list.html', context=context)
 
 
 def post_detail(request, post_id=None):

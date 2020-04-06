@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh_cn">
 <head>
     <meta charset="UTF-8">
-    <title>List</title>
+    <title>TypeIdea 博客系统</title>
 </head>
 <body>
+    {% if tag %}
+        标签页：{{ tag.name }}
+    {% endif %}
+    {% if category %}
+        分类页：{{ category.name }}
+    {% endif %}
     {% for post in post_list %}
         <li>
             <a href="/post/{{ post.id }}.html">{{ post.title }}</a>
@@ -14,6 +20,9 @@
             </div>
             <p>
                 {{ post.desc }}
+            </p>
+            <p>
+                {{ post.content }}
             </p>
         </li>
     {% endfor %}
