@@ -11,20 +11,32 @@ def post_list(request, category_id=None, tag_id=None):
     category = None
 
     if tag_id:
-        post_list, tag = Post.get_by_tag(tag_id)
-    elif category_id:
-        post_list, category = Post.get_by_category(category_id)
+        # try……except：如果查询到不存在的对象，需要捕获并处理异常，避免当数据不存在时出现错误
+        try:
+            # tag 和 post 是多对多的关系，需要先获取tag对象，接着通过对象来获取对应的文章列表
+            tag = Tag.objects.get(id=tag_id)
+        except tag.DoesNotExist:
+            post_list = []
+        else:
+            post_list = tag.post_set.filter(status=Post.STATUS_NORMAL)
     else:
-        # 和书上不一致的地方，书上没有返回
-        post_list = Post.latest_posts()
-        # post_list = Post.objects.filter(status=Post.STATUS_NORMAL).select_related('owner', 'category')
+        # 逻辑如下：先取出状态正常的所有的Post的集合，在从其中过滤出指定id的Post。
+        # 而不是先过滤出指定id的Post，再看文章状态是否正常。
+        post_list = Post.objects.filter(status=Post.STATUS_NORMAL)
+        if category_id:
+            try:
+                category = Category.objects.get(id = category_id)
+            except Category.DoesNotExist:
+                category = None
+            else:
+                post_list = post_list.filter(category_id=category_id)
 
     context = {
         'category': category,
         'tag': tag,
         'post_list': post_list,
     }
-    # 进行数据回传的时候，要注意context中的内容，不要把后面的加上''，成为'context'
+    # 进行数据回传的时候，要注意context中的内容，不要把后面的加上''，成为'post_list'
     return render(request, 'blog/list.html', context=context)
 
 
