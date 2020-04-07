@@ -23,6 +23,9 @@ class Link(models.Model):
     class Meta:
         verbose_name = verbose_name_plural = '友链'
 
+    def __str__(self):
+        return self.href
+
 
 class SideBar(models.Model):
     STATUS_SHOW = 1
@@ -48,3 +51,12 @@ class SideBar(models.Model):
 
     class Meta:
         verbose_name = verbose_name_plural = '侧边栏'
+
+    def __str__(self):
+        return self.title
+
+    # 获取所有的SideBar
+    # 不要忘记加入status
+    @classmethod
+    def get_all(cls):
+        return cls.objects.filter(status=cls.STATUS_SHOW)

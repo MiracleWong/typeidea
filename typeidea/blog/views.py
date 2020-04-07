@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Post, Tag, Category
+from config.models import SideBar
 
 
 # Create your views here.
@@ -35,6 +36,7 @@ def post_list(request, category_id=None, tag_id=None):
         'category': category,
         'tag': tag,
         'post_list': post_list,
+        'sidebars': SideBar.get_all(),
     }
     context.update(Category.get_navs())
     # 进行数据回传的时候，要注意context中的内容，不要把后面的加上''，成为'post_list'
@@ -50,6 +52,7 @@ def post_detail(request, post_id=None):
 
     context = {
         'post': post,
+        'sidebars': SideBar.get_all(),
     }
     context.update(Category.get_navs())
     return render(request, 'blog/detail.html', context=context)
