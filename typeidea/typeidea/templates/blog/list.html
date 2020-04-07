@@ -11,6 +11,11 @@
     {% if category %}
         分类页：{{ category.name }}
     {% endif %}
+    <div>顶部分类：
+        {% for cate in navs %}
+            <a href="/category/{{ cate.id }}">{{ cate.name }}</a>
+        {% endfor %}
+    </div>
     {% for post in post_list %}
         <li>
             <a href="/post/{{ post.id }}.html">{{ post.title }}</a>
@@ -26,5 +31,10 @@
             </p>
         </li>
     {% endfor %}
+    <div>底部分类：
+        {% for cate in categories %}
+            <a href="/category/{{ cate.id }}">{{ cate.name }}</a>
+        {% endfor %}
+    </div>
 </body>
 </html>
