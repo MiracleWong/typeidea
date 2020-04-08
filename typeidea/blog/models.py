@@ -79,6 +79,25 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    # 获取类别：导航和正常分类，数据操作的放在Model层
+    @classmethod
+    def get_navs(cls):
+        categories = Category.objects.filter(status=cls.STATUS_NORMAL)
+        # nav_categories = categories.filter(is_nav=True)
+        # normal_categories = categories.filter(is_nav=False)
+        nav_categories = []
+        normal_categories = []
+        for cate in categories:
+            if cate.is_nav:
+                nav_categories.append(cate)
+            else:
+                normal_categories.append(cate)
+
+        return {
+            'navs': nav_categories,
+            'categories': normal_categories,
+        }
+
 
 class Tag(models.Model):
     STATUS_NORMAL = 1
@@ -124,6 +143,9 @@ class Post(models.Model):
     # TODO 需要重新梳理文章和标签的关系，是一对多，还是多对多
     tag = models.ForeignKey(Tag, verbose_name='标签')
     created_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    # pv和uv
+    pv = models.PositiveIntegerField(default=1)
+    uv = models.PositiveIntegerField(default=1)
 
     def __str__(self):
         return '<Post>: {}>'.format(self.title)
@@ -133,3 +155,13 @@ class Post(models.Model):
         # 根据id进行降序排列
         # Category类，还有一个列 id，虽然没有显示定义，但 django 会为我们自动创建，这是一个自增类型。
         ordering = ['-id']
+
+    # 最新文章，根据created_time递减
+    @classmethod
+    def latest_pots(cls):
+        return cls.objects.filter(status=cls.STATUS_NORMAL).order_by('-created_time')
+
+    # 最热文章，根据PV递减
+    @classmethod
+    def hot_pots(cls):
+        return cls.objects.filter(status=cls.STATUS_NORMAL).order_by('-pv')

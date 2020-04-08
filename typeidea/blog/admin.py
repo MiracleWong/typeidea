@@ -58,7 +58,7 @@ class CategoryOwnerFilter(admin.SimpleListFilter):
 
 @admin.register(Post, site=custom_site)
 class PostAdmin(BaseOwnerAdmin):
-    form = PostAdminForm
+    # form = PostAdminForm
     # list_display 配置列表页面展示哪些字段
     list_display = [
         'title', 'category', 'status',
@@ -90,7 +90,7 @@ class PostAdmin(BaseOwnerAdmin):
 
     fieldsets = (
         ('基础配置', {
-            'description': '基础配置描述',
+            # 'description': '基础配置描述',
             'fields': (
                 ('category', 'title'),
                 'status',
@@ -103,7 +103,7 @@ class PostAdmin(BaseOwnerAdmin):
             ),
         }),
         ('额外信息', {
-            'classes': ('collapse',),
+            'classes': ('wide',),
             'fields': ('tag',)
         }),
     )

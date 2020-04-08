@@ -1,62 +1,58 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Post, Tag, Category
+from config.models import SideBar
 
 
 # Create your views here.
 
-
-# def post_list(request, category_id=None, tag_id=None):
-#     if tag_id:
-#         print("tag_id:"+tag_id)
-#         try:
-#             tag = Tag.objects.get(id=tag_id)
-#             # print("tag:"+tag)
-#         except tag.DoesNotExist:
-#             post_list = []
-#         else:
-#             post_list = tag.post_set.filter(status=Post.STATUS_NORMAL)
-#     else:
-#         post_list = Post.objects.filter(status=Post.STATUS_NORMAL)
-#         if category_id:
-#             post_list = post_list.filter(category_id=category_id)
-#
-#     return render(request, 'blog/list.html', context={'post_list': 'post_list'})
-#
-#
-# def post_detail(request, post_id=None):
-#     try:
-#         post = Post.objects.get(id=post_id)
-#     except Post.DoesNotExist:
-#         post = None
-#     return render(request, 'blog/detail.html', context={'post': 'post'})
+# post_list 的逻辑是：从Model从数据库中批量拿取数据，然后把标题和摘要展示到页面上。
 def post_list(request, category_id=None, tag_id=None):
-    queryset = Post.objects.all()
-    if category_id:
-        # 分类页面
-        queryset = queryset.filter(category_id=category_id)
-    elif tag_id:
-        # 标签页面
+    tag = None
+    category = None
+
+    if tag_id:
+        # try……except：如果查询到不存在的对象，需要捕获并处理异常，避免当数据不存在时出现错误
         try:
+            # tag 和 post 是多对多的关系，需要先获取tag对象，接着通过对象来获取对应的文章列表
             tag = Tag.objects.get(id=tag_id)
-        except Tag.DoesNotExist:
-            queryset = []
+        except tag.DoesNotExist:
+            post_list = []
         else:
-            queryset = tag.posts.all()
+            post_list = tag.post_set.filter(status=Post.STATUS_NORMAL)
+    else:
+        # 逻辑如下：先取出状态正常的所有的Post的集合，在从其中过滤出指定id的Post。
+        # 而不是先过滤出指定id的Post，再看文章状态是否正常。
+        post_list = Post.objects.filter(status=Post.STATUS_NORMAL)
+        if category_id:
+            try:
+                category = Category.objects.get(id = category_id)
+            except Category.DoesNotExist:
+                category = None
+            else:
+                post_list = post_list.filter(category_id=category_id)
 
     context = {
-        'posts': queryset,
+        'category': category,
+        'tag': tag,
+        'post_list': post_list,
+        'sidebars': SideBar.get_all(),
     }
+    context.update(Category.get_navs())
+    # 进行数据回传的时候，要注意context中的内容，不要把后面的加上''，成为'post_list'
     return render(request, 'blog/list.html', context=context)
 
 
-def post_detail(request, pk=None):
+def post_detail(request, post_id=None):
     try:
-        post = Post.objects.get(pk=pk)
+        # 通过id获取指定的Post文章
+        post = Post.objects.get(id=post_id)
     except Post.DoesNotExist:
         post = None
 
     context = {
         'post': post,
+        'sidebars': SideBar.get_all(),
     }
+    context.update(Category.get_navs())
     return render(request, 'blog/detail.html', context=context)
