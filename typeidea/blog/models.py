@@ -156,6 +156,11 @@ class Post(models.Model):
         # Category类，还有一个列 id，虽然没有显示定义，但 django 会为我们自动创建，这是一个自增类型。
         ordering = ['-id']
 
+    # 最新文章，根据created_time递减
+    @classmethod
+    def latest_pots(cls):
+        return cls.objects.filter(status=cls.STATUS_NORMAL).order_by('-created_time')
+
     # 最热文章，根据PV递减
     @classmethod
     def hot_pots(cls):
