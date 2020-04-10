@@ -16,15 +16,17 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from .custom_admin import custom_site
-from blog.views import post_list, post_detail
+from blog.views import post_list, post_detail, PostDetailView, PostListlView, TagView, CategoryView, IndexView
 from config.views import links
 
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
-    url(r'^$', post_list, name='index'),
-    url(r'^category/(?P<category_id>\d+)/$', post_list, name='category-list'),
-    url(r'^tag/(?P<tag_id>\d+)/$', post_list, name='tag-list'),
-    url(r'^post/(?P<post_id>\d+).html$', post_detail, name='post-detail'),
+    url(r'^$', IndexView.as_view(), name='index'),
+    url(r'^category/(?P<category_id>\d+)/$', CategoryView.as_view(), name='category-list'),
+    url(r'^tag/(?P<tag_id>\d+)/$', TagView.as_view(), name='tag-list'),
+    # url(r'^post/(?P<post_id>\d+).html$', post_detail, name='post-detail'),
+    # pk的意思是Primary Key，指的是id，但是 detail view 要求，必须使用的是pk
+    url(r'^post/(?P<pk>\d+).html$', PostDetailView.as_view(), name='post-detail'),
     url(r'^links/$', links, name='links'),
     url(r'^super_admin/', admin.site.urls, name='super-admin'),
     url(r'^admin/', custom_site.urls, name='admin'),
