@@ -2,11 +2,13 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Post, Tag, Category
 from config.models import SideBar
-from django.views.generic import DetailView
+from django.views.generic import DetailView, ListView
 
 # Create your views here.
 
 # post_list 的逻辑是：从Model从数据库中批量拿取数据，然后把标题和摘要展示到页面上。
+
+
 def post_list(request, category_id=None, tag_id=None):
     tag = None
     category = None
@@ -61,3 +63,11 @@ def post_detail(request, post_id=None):
 class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/detail.html'
+
+
+class PostListlView(ListView):
+    queryset = Post.latest_pots()
+    paginate_by = 1
+    context_object_name = 'post_list'  # 如果不设置此项，在模板中需要使用object_list 变量
+    template_name = 'blog/detail.html'
+
