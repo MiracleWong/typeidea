@@ -108,7 +108,7 @@ class CategoryView(IndexView):
 
     def get_queryset(self):
         """重写queryset，根据分类过滤"""
-        queryset = super.get_queryset()
+        queryset = super().get_queryset()
         category_id = self.kwargs.get('category_id')
         return queryset.filter(category_id=category_id)
 
