@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Post, Tag, Category
 from config.models import SideBar
-
+from django.views.generic import DetailView
 
 # Create your views here.
 
@@ -56,3 +56,8 @@ def post_detail(request, post_id=None):
     }
     context.update(Category.get_navs())
     return render(request, 'blog/detail.html', context=context)
+
+
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'blog/detail.html'
