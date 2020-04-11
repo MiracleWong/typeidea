@@ -17,7 +17,7 @@ from django.conf.urls import url
 from django.contrib import admin
 from .custom_admin import custom_site
 from blog.views import PostDetailView, PostListlView, TagView, CategoryView, IndexView,SearchView, AuthorView
-from config.views import links
+from config.views import LinkListView
 
 urlpatterns = [
     # url(r'^admin/', admin.site.urls),
@@ -31,7 +31,7 @@ urlpatterns = [
     url(r'^search/$', SearchView.as_view(), name='search'),
     # 作者页面
     url(r'^author/(?P<owner_id>\d+)/$', AuthorView.as_view(), name="author"),
-    url(r'^links/$', links, name='links'),
+    url(r'^links/$', LinkListView.as_view(), name='links'),
     url(r'^super_admin/', admin.site.urls, name='super-admin'),
     url(r'^admin/', custom_site.urls, name='admin'),
 ]
