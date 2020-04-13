@@ -14,7 +14,7 @@ class Comment(models.Model):
         (STATUS_DELETE, '删除'),
     )
 
-    target = models.ForeignKey(Post, verbose_name='评论目标')
+    target = models.CharField(max_length=100, verbose_name='评论目标')
     content = models.CharField(max_length=2000, verbose_name='内容')
     nickname = models.CharField(max_length=500, verbose_name='昵称')
     # URLField：继承自CharField，实现对URL的特殊处理
