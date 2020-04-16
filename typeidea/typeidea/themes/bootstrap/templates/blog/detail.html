@@ -11,7 +11,9 @@
     </div>
     <hr/>
     <p>
-        {{ post.content }}
+        {% autoescape off %}
+            {{ post.content }}
+        {% endautoescape %}
     </p>
     {% endif %}
     <div class="comment">

@@ -1,7 +1,7 @@
 
 from django.db import models
 from django.contrib.auth.models import User
-
+import mistune
 
 # Create your models here.
 class Category(models.Model):
@@ -135,6 +135,8 @@ class Post(models.Model):
     desc = models.CharField(max_length=1024, blank=True, verbose_name='摘要')
     # TextField 来存储大量文本内容，对应于MySQL中的logtext
     content = models.TextField(verbose_name='正文', help_text='正文必须为Markdown格式')
+    # content_html 为了正文支持Markdown
+    content_html = models.TextField(verbose_name='正文html代码', blank=True, editable=False)
     status = models.PositiveIntegerField(choices=STATUS_ITEMS, default=STATUS_NORMAL, verbose_name="状态")
     owner = models.ForeignKey(User, verbose_name='作者')
     # 我们规定一篇文章只能对应一个分类，但是一个分类下可以有多篇文章，使用的是 ForeignKey，即一对多的关联关系。
@@ -155,6 +157,10 @@ class Post(models.Model):
         # 根据id进行降序排列
         # Category类，还有一个列 id，虽然没有显示定义，但 django 会为我们自动创建，这是一个自增类型。
         ordering = ['-id']
+
+    def save(self, *args, **kwargs):
+        self.content_html = mistune.markdown(self.content)
+        super().save(*args, **kwargs)
 
     # 最新文章，根据created_time递减
     @classmethod
