@@ -99,9 +99,6 @@ class PostListlView(ListView):
     template_name = 'blog/list.html'
 
 
-
-
-
 class IndexView(CommonViewMiXin, ListView):
     queryset = Post.latest_pots()
     paginate_by = 5
