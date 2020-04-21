@@ -4,6 +4,9 @@ from .models import Post, Tag, Category
 from config.models import SideBar
 from django.views.generic import DetailView, ListView
 from django.shortcuts import get_object_or_404
+from django.db.models import Q, QuerySet
+from comment.forms import CommentForm
+from comment.models import Comment
 
 
 # Create your views here.
@@ -62,21 +65,6 @@ def post_detail(request, post_id=None):
     return render(request, 'blog/detail.html', context=context)
 
 
-class PostDetailView(DetailView):
-    queryset = Post.latest_pots()
-    template_name = 'blog/detail.html'
-    context_object_name = 'post'
-    # TODO 这里书上为post_id , 出现错误，改为pk 后正常
-    pk_url_kwarg = 'pk'
-
-
-class PostListlView(ListView):
-    queryset = Post.latest_pots()
-    paginate_by = 1
-    context_object_name = 'post_list'  # 如果不设置此项，在模板中需要使用object_list 变量
-    template_name = 'blog/list.html'
-
-
 class CommonViewMiXin:
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -86,6 +74,29 @@ class CommonViewMiXin:
         })
         context.update(Category.get_navs())
         return context
+
+
+class PostDetailView(CommonViewMiXin, DetailView):
+    queryset = Post.latest_pots()
+    template_name = 'blog/detail.html'
+    context_object_name = 'post'
+    # TODO 这里书上为post_id , 出现错误，改为pk 后正常
+    pk_url_kwarg = 'pk'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'comment_form': CommentForm,
+            'comment_list': Comment.get_by_target(self.request.path)
+        })
+        return context
+
+
+class PostListlView(ListView):
+    queryset = Post.latest_pots()
+    paginate_by = 1
+    context_object_name = 'post_list'  # 如果不设置此项，在模板中需要使用object_list 变量
+    template_name = 'blog/list.html'
 
 
 class IndexView(CommonViewMiXin, ListView):
@@ -129,3 +140,29 @@ class TagView(IndexView):
         queryset = super.get_queryset()
         tag_id = self.kwargs.get('tag_id')
         return queryset.filter(tag_id=tag_id)
+
+
+class SearchView(IndexView):
+    def get_context_data(self, **kwargs):
+        context = super(SearchView, self).get_context_data()
+        context.update({
+            'keyword': self.request.GET.get('keyword', '')
+        })
+        return context
+
+    def get_queryset(self):
+        queryset = super(SearchView, self).get_queryset()
+        keyword = self.request.GET.get('keyword')
+
+        if not keyword:
+            return queryset
+
+        return queryset.filter(Q(title__icontains=keyword) | Q(title__icontains=keyword))
+
+
+class AuthorView(IndexView):
+    def get_queryset(self):
+        queryset = super(AuthorView, self).get_queryset()
+        author_id = self.kwargs.get('owner_id')
+
+        return queryset.filter(owner_id=author_id)
