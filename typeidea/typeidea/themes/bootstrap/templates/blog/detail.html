@@ -1,5 +1,6 @@
 {% extends "./base.html" %}
-{% block title %} {{ post.title }} {% endblock %}
+{% load comment_block %}
+{% block title %} {{ post.title }}{% endblock %}
 
 {% block main %}
     {% if post %}
@@ -16,24 +17,7 @@
         {% endautoescape %}
     </p>
     {% endif %}
-    <div class="comment">
-        <form action="/comment/" class="form-group" method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="target" value="{{ request.path }}" />
-            {{ comment_form }}
-        </form>
 
-        <!-- 评论列表 -->
-        <ul class="list-group">
-            {% for comment in comment_list %}
-                <li class="list-group-item">
-                    <div class="nickname">
-                        <a href="{{ comment.website }}">{{ comment.nickname }}</a>
-                        <span>{{ comment.created_time }}</span>
-                    </div>
-                    <div>{{ comment.content }}</div>
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
+    {% comment_block request.path %}
+
 {% endblock %}
