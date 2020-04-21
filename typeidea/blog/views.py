@@ -4,7 +4,7 @@ from .models import Post, Tag, Category
 from config.models import SideBar
 from django.views.generic import DetailView, ListView
 from django.shortcuts import get_object_or_404
-from django.db.models import Q, QuerySet
+from django.db.models import Q, F
 from comment.forms import CommentForm
 from comment.models import Comment
 
@@ -90,6 +90,15 @@ class PostDetailView(CommonViewMiXin, DetailView):
             'comment_list': Comment.get_by_target(self.request.path)
         })
         return context
+    
+    def get(self, request, *args, **kwargs):
+        response = super(PostDetailView, self).get(request, *args, **kwargs)
+        Post.objects.filter(pk=self.object.id).update(pv=F('pv')+1, uv=F('uv')+1)
+
+        # 调试用
+        from django.db import connection
+        print(connection.queries)
+        return response
 
 
 class PostListlView(ListView):
