@@ -102,7 +102,7 @@ class PostDetailView(CommonViewMiXin, DetailView):
         increase_pv = False
         increase_uv = False
 
-        uid = self.request.id
+        uid = self.request.uid
 
         pv_key = 'pv:%s:%s' % (uid, self.request.path)
         uv_key = 'uv:%s:%s:%s' % (uid, str(date.today()), self.request.path)
