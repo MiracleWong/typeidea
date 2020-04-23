@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'blog',
     'config',
     'comment',
+    'xadmin',
+    'crispy_forms',
     'raven.contrib.django.raven_compat',
     'django.contrib.admin',
     'django.contrib.auth',
