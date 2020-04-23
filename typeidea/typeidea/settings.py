@@ -136,3 +136,6 @@ RAVEN_CONFIG = {
     # release based on the git info.
     # 'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
 }
+
+XADMIN_TITLE = 'TypeIdea管理后台'
+XADMIN_FOOTER_TITLE = 'Power by www.miraclewong.cc'

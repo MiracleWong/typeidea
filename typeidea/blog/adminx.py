@@ -3,16 +3,20 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
 import xadmin
-from xadmin.layout import Row, Fieldset
+from xadmin.layout import Row, Fieldset, Container
 from xadmin.filters import manager, RelatedFieldListFilter
 from .models import Post, Tag, Category
 from typeidea.base_admin import BaseOwnerAdmin
 
 
 # 这是一个伪需求：6.2.5 在同一页面编辑关联数据
-class PostInLine(admin.TabularInline):
-    fields = ('title', 'desc')
-    extra = 1
+class PostInLine:
+    form_layout = (
+        Container(
+            Row('title', 'desc')
+        )
+    )
+    extra = 0  # 额外控制多少个
     model = Post
 
 
