@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     # 'simpleui',
+    'ckeditor',
     'dal',
     'dal_select2',
     'typeidea',
@@ -141,3 +142,14 @@ RAVEN_CONFIG = {
 
 XADMIN_TITLE = 'TypeIdea管理后台'
 XADMIN_FOOTER_TITLE = 'Power by www.miraclewong.cc'
+
+# ckeditor 的配置
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': 800,
+        'tabSpaces': 4,
+        'extraPlugins': 'codesnippet',
+    },
+}
