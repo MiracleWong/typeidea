@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # 'simpleui',
     'ckeditor',
+    'ckeditor_uploader',
     'dal',
     'dal_select2',
     'typeidea',
@@ -153,3 +154,8 @@ CKEDITOR_CONFIGS = {
         'extraPlugins': 'codesnippet',
     },
 }
+
+# Media files storage directory
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+CKEDITOR_UPLOAD_PATH = "article_images"

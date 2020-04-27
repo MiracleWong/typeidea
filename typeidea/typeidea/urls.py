@@ -15,7 +15,9 @@ Including another URLconf
 """
 
 import xadmin
-from django.conf.urls import url
+from django.conf import settings
+from django.conf.urls import url, include
+from django.conf.urls.static import static
 from django.contrib.sitemaps import views as sitemap_views
 from blog.views import (
     PostDetailView, TagView, CategoryView,
@@ -49,5 +51,8 @@ urlpatterns = [
     url(r'^category-autocomplete/$', CategoryAutoComplete.as_view(), name='category-autocomplete'),
     url(r'^tag-autocomplete/$', TagAutoComplete.as_view(), name='tag-autocomplete'),
 
-]
+    # 上传的图片
+    url(r'^ckeditor/', include('ckeditor_uploader.urls'))
+
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
