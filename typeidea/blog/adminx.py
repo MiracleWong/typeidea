@@ -7,6 +7,7 @@ from xadmin.layout import Row, Fieldset, Container
 from xadmin.filters import manager, RelatedFieldListFilter
 from .models import Post, Tag, Category
 from typeidea.base_admin import BaseOwnerAdmin
+from .adminforms import PostAdminForm
 
 
 # 这是一个伪需求：6.2.5 在同一页面编辑关联数据
@@ -58,7 +59,7 @@ manager.register(CategoryOwnerFilter, take_priority=True)
 
 @xadmin.sites.register(Post)
 class PostAdmin(BaseOwnerAdmin):
-    # form = PostAdminForm
+    form = PostAdminForm
     # list_display 配置列表页面展示哪些字段
     list_display = [
         'title', 'category', 'status',

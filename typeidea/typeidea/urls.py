@@ -25,6 +25,7 @@ from comment.views import CommentView
 from config.views import LinkListView
 from blog.rss import LatestPostFeed
 from blog.sitemap import PostSitemap
+from .autocomplete import CategoryAutoComplete, TagAutoComplete
 
 
 urlpatterns = [
@@ -44,5 +45,9 @@ urlpatterns = [
     url(r'^rss|feed/', LatestPostFeed(), name='rss'),
     # Sitemap
     url(r'^sitemap\.xml$', sitemap_views.sitemap, {'sitemaps': {'posts': PostSitemap }}),
+    # 配置
+    url(r'^category-autocomplete/$', CategoryAutoComplete.as_view(), name='category-autocomplete'),
+    url(r'^tag-autocomplete/$', TagAutoComplete.as_view(), name='tag-autocomplete'),
+
 ]
 
