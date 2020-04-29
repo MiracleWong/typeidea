@@ -146,6 +146,7 @@ class Post(models.Model):
     category = models.ForeignKey(Category, verbose_name='分类')
     # TODO 需要重新梳理文章和标签的关系，是一对多，还是多对多
     tag = models.ForeignKey(Tag, verbose_name='标签')
+    is_md = models.BooleanField(default=False, verbose_name='markdown语法')
     created_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
     # pv和uv
     pv = models.PositiveIntegerField(default=1)
@@ -161,7 +162,12 @@ class Post(models.Model):
         ordering = ['-id']
 
     def save(self, *args, **kwargs):
-        self.content_html = mistune.markdown(self.content)
+        # 如果is_md为True, markdown 转换；为False，直接存储content内容
+        if self.is_md:
+            self.content_html = mistune.markdown(self.content)
+        else:
+            self.content_html = self.content
+
         super().save(*args, **kwargs)
 
     # 最新文章，根据created_time递减
