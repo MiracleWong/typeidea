@@ -21,7 +21,7 @@ et-xmlfile==1.0.1
 future==0.18.2
 httplib2==0.9.2
 idna==2.9
-ipython==7.13.0
+ipython==7.16.3
 ipython-genutils==0.2.0
 itypes==1.1.0
 jdcal==1.4.1
